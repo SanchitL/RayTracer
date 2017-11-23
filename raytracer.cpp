@@ -10,7 +10,6 @@
 
 ***********************************************************/
 
-
 #include "raytracer.h"
 #include "bmp_io.h"
 #include <cmath>
@@ -44,8 +43,7 @@ SceneDagNode* Raytracer::addObject( SceneDagNode* parent,
 			parent = parent->next;
 		}
 		parent->next = node;
-	}
-	
+	}	
 	return node;;
 }
 
@@ -174,9 +172,6 @@ void Raytracer::computeTransforms( SceneDagNode* node )
         computeTransforms(childPtr);
         childPtr = childPtr->next;
     }
-
-
-
 }
 
 void Raytracer::traverseScene( SceneDagNode* node, Ray3D& ray ) {
@@ -196,7 +191,6 @@ void Raytracer::traverseScene( SceneDagNode* node, Ray3D& ray ) {
         traverseScene(childPtr, ray);
         childPtr = childPtr->next;
     }
-
 }
 
 void Raytracer::computeShading( Ray3D& ray ) {
@@ -204,9 +198,7 @@ void Raytracer::computeShading( Ray3D& ray ) {
     for (;;) {
         if (curLight == NULL) break;
         // Each lightSource provides its own shading function.
-
         // Implement shadows here if needed.
-
         curLight->light->shade(ray);
         curLight = curLight->next;
     }
@@ -280,7 +272,6 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 			_bbuffer[i*width+j] = int(col[2]*255);
 		}
 	}
-
 	flushPixelBuffer(fileName);
 }
 
