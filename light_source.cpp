@@ -19,6 +19,19 @@ void PointLight::shade( Ray3D& ray ) {
 	// It is assumed at this point that the intersection information in ray 
 	// is available.  So be sure that traverseScene() is called on the ray 
 	// before this function.  
+	if (ray.intersection.none == true) {
+		return;
+	}
+	Colour diffuse;
+	double diffuse_r = _col_diffuse[0] * ray.intersection.mat->diffuse[0] * (ray.intersection.normal.dot(ray.intersection.point - _pos));
+	double diffuse_g = _col_diffuse[1] * ray.intersection.mat->diffuse[1] * (ray.intersection.normal.dot(ray.intersection.point - _pos));
+	double diffuse_b = _col_diffuse[2] * ray.intersection.mat->diffuse[2] * (ray.intersection.normal.dot(ray.intersection.point - _pos));
 
+	diffuse[0] = diffuse_r;
+	diffuse[1] = diffuse_g;
+	diffuse[2] = diffuse_b;
+
+	ray.col = diffuse;
+	ray.col.clamp();
 }
 

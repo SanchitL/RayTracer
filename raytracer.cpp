@@ -222,7 +222,7 @@ void Raytracer::flushPixelBuffer( std::string file_name ) {
 }
 
 Colour Raytracer::shadeRay( Ray3D& ray ) {
-    Colour col(0.0, 0.0, 0.0); 
+    Colour col(0.2, 0.2, 0.2); 
     traverseScene(_root, ray); 
 
     // Don't bother shading if the ray didn't hit 
@@ -236,7 +236,7 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
     // of course) here to implement reflection/refraction effects.  
 
     return col; 
-}	
+}
 
 void Raytracer::render( int width, int height, Point3D eye, Vector3D view, 
         Vector3D up, double fov, std::string fileName ) {
@@ -261,11 +261,21 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 			imagePlane[2] = -1;
 
 			// TODO: Convert ray to world space and call 
-			// shadeRay(ray) to generate pixel colour. 	
-			
-			Ray3D ray;
+			// shadeRay(ray) to generate pixel colour. 
+			Vector3D direction = Vector3D(imagePlane[0], imagePlane[1], imagePlane[2]);
 
-			Colour col = shadeRay(ray); 
+			Vector3D normalDirection = Vector3D(direction[0] * direction.normalize(), 
+				direction[1] * direction.normalize(), 
+				direction[2] * direction.normalize());
+
+			Vector3D worldDir = viewToWorld * normalDirection;
+
+			Vector3D normalWorldDirection = Vector3D(worldDir[0] * worldDir.normalize(),
+				worldDir[1] * worldDir.normalize(),
+				worldDir[2] * worldDir.normalize());
+
+			Ray3D ray = Ray3D(viewToWorld * origin, normalWorldDirection);
+			Colour col = shadeRay(ray);
 
 			_rbuffer[i*width+j] = int(col[0]*255);
 			_gbuffer[i*width+j] = int(col[1]*255);
