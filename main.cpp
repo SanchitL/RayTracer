@@ -9,6 +9,7 @@ CSC418, SPRING 2005
 
 #include "raytracer.h"
 #include <cstdlib>
+#include <iostream>
 
 int main(int argc, char* argv[])
 {
@@ -20,12 +21,18 @@ int main(int argc, char* argv[])
 	Raytracer raytracer;
 	int width = 320;
 	int height = 240;
+	int aaSamples = 1;
 
-	if (argc == 3) {
+	if (argc >= 3) {
 		width = atoi(argv[1]);
 		height = atoi(argv[2]);
 	}
 
+	if (argc == 4) {
+		aaSamples = atoi(argv[3]);
+	}
+
+	std::cout << "Rendering with width: " << width << ", height: " << height << " ..." << std::endl;
 	// Camera parameters.
 	Point3D eye(0, 0, 1);
 	Vector3D view(0, 0, -1);
@@ -35,10 +42,12 @@ int main(int argc, char* argv[])
 	// Defines a material for shading.
 	Material gold(Colour(0.3, 0.3, 0.3), Colour(0.75164, 0.60648, 0.22648),
 		Colour(0.628281, 0.555802, 0.366065),
-		51.2);
+		51.2,
+		true);
 	Material jade(Colour(0, 0, 0), Colour(0.54, 0.89, 0.63),
 		Colour(0.316228, 0.316228, 0.316228),
-		12.8);
+		12.8,
+		true);
 
 	// Defines a point light source.
 	raytracer.addLightSource(new PointLight(Point3D(0, 0, 5),
@@ -62,12 +71,15 @@ int main(int argc, char* argv[])
 
 	// Render the scene, feel free to make the image smaller for
 	// testing purposes.	
-	raytracer.render(width, height, eye, view, up, fov, "view1.bmp");
+	// std::cout << "Now rendering view1 .... \n" << std::endl;
+	// raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
 
 	// Render it from a different point of view.
 	Point3D eye2(4, 2, 1);
 	Vector3D view2(-4, -2, -6);
-	raytracer.render(width, height, eye2, view2, up, fov, "view2.bmp");
+
+	std::cout << "Now rendering view2 .... \n" << std::endl;
+	raytracer.render(width, height, eye2, view2, up, fov, aaSamples, "view2.bmp");
 
 	return 0;
 }

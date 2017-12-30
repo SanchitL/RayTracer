@@ -200,6 +200,22 @@ void Raytracer::computeShading( Ray3D& ray ) {
         // Each lightSource provides its own shading function.
         // Implement shadows here if needed.
         curLight->light->shade(ray);
+		// shadows
+		Point3D shadowPoint = ray.intersection.point;
+		Vector3D shadowDir = curLight->light->get_position() - shadowPoint;
+		double length = shadowDir.length();
+		shadowDir.normalize();
+		// Off set to avoid intersection with itself
+		Point3D point = shadowPoint + (0.01 * shadowDir);
+
+		Ray3D shadowRay = Ray3D(point, shadowDir);
+
+		traverseScene(_root, shadowRay);
+
+		if (!shadowRay.intersection.none) {
+			ray.col = ray.intersection.mat->ambient;
+		}
+
         curLight = curLight->next;
     }
 }
@@ -221,8 +237,8 @@ void Raytracer::flushPixelBuffer( std::string file_name ) {
     delete _bbuffer;
 }
 
-Colour Raytracer::shadeRay( Ray3D& ray ) {
-    Colour col(0.2, 0.2, 0.2); 
+Colour Raytracer::shadeRay( Ray3D& ray, int relfectionsLeft ) {
+    Colour col(0.0, 0.0, 0.0); 
     traverseScene(_root, ray); 
 
     // Don't bother shading if the ray didn't hit 
@@ -230,16 +246,39 @@ Colour Raytracer::shadeRay( Ray3D& ray ) {
     if (!ray.intersection.none) {
         computeShading(ray); 
         col = ray.col;  
+
+		// You'll want to call shadeRay recursively (with a different ray, 
+		// of course) here to implement reflection/refraction effects.
+
+		//Reflection
+
+		if (relfectionsLeft > 0 && ray.intersection.mat->isReflective) {
+
+			Vector3D normal = ray.intersection.normal;
+			normal.normalize();
+			Vector3D reflectDir = ray.dir - 2 * normal.dot(ray.dir) * normal;
+			reflectDir.normalize();
+
+			Point3D reflectPoint = ray.intersection.point;
+
+			reflectPoint = reflectPoint = reflectPoint + 0.1*reflectDir;
+
+			Ray3D reflectRay(reflectPoint, reflectDir);
+
+			Colour reflectColor = shadeRay(reflectRay, relfectionsLeft - 1);
+			reflectColor.clamp();
+
+			col = col + (ray.intersection.mat->specular * reflectColor);
+		}
     }
 
-    // You'll want to call shadeRay recursively (with a different ray, 
-    // of course) here to implement reflection/refraction effects.  
+	col.clamp();
 
     return col; 
-}
+}	
 
 void Raytracer::render( int width, int height, Point3D eye, Vector3D view, 
-        Vector3D up, double fov, std::string fileName ) {
+        Vector3D up, double fov, int aaSamples, std::string fileName ) {
     computeTransforms(_root);
     Matrix4x4 viewToWorld;
     _scrWidth = width;
@@ -254,6 +293,32 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
         for (int j = 0; j < _scrWidth; j++) {
             // Sets up ray origin and direction in view space, 
             // image plane is at z = -1.
+			/////////////////
+			int samples = aaSamples;
+			int samples2 = samples * samples;
+			/////////////////
+			Colour color(0.0, 0.0, 0.0);
+			for (int k = 0; k < samples*samples; k++) {
+				int y = (int)k / samples;
+				int x = k % samples;
+
+				Point3D origin(0, 0, 0);
+				Point3D imagePlane;
+				imagePlane[0] = (-double(width) / 2 + (1.0/(1 + samples)) + (x*0.20) + j) / factor;
+				imagePlane[1] = (-double(height) / 2 + (1.0 / (1 + samples)) + (x*0.20) + i) / factor;
+				imagePlane[2] = -1;
+
+				// TODO: Convert ray to world space and call 
+				// shadeRay(ray) to generate pixel colour. 
+				Vector3D direction = imagePlane - origin;
+				direction.normalize();
+				Ray3D ray = Ray3D(viewToWorld * origin, viewToWorld * direction);
+				ray.dir.normalize();
+				Colour col = shadeRay(ray, 1);
+
+				color = color + col;
+			}
+			/*
             Point3D origin(0, 0, 0);
 			Point3D imagePlane;
 			imagePlane[0] = (-double(width)/2 + 0.5 + j)/factor;
@@ -262,24 +327,16 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 
 			// TODO: Convert ray to world space and call 
 			// shadeRay(ray) to generate pixel colour. 
-			Vector3D direction = Vector3D(imagePlane[0], imagePlane[1], imagePlane[2]);
+			Vector3D direction = imagePlane - origin;
+			direction.normalize();
+			Ray3D ray = Ray3D(viewToWorld * origin, viewToWorld * direction);
+			ray.dir.normalize();
+			Colour col = shadeRay(ray, 1);
+			*/
 
-			Vector3D normalDirection = Vector3D(direction[0] * direction.normalize(), 
-				direction[1] * direction.normalize(), 
-				direction[2] * direction.normalize());
-
-			Vector3D worldDir = viewToWorld * normalDirection;
-
-			Vector3D normalWorldDirection = Vector3D(worldDir[0] * worldDir.normalize(),
-				worldDir[1] * worldDir.normalize(),
-				worldDir[2] * worldDir.normalize());
-
-			Ray3D ray = Ray3D(viewToWorld * origin, normalWorldDirection);
-			Colour col = shadeRay(ray);
-
-			_rbuffer[i*width+j] = int(col[0]*255);
-			_gbuffer[i*width+j] = int(col[1]*255);
-			_bbuffer[i*width+j] = int(col[2]*255);
+			_rbuffer[i*width+j] = int((color[0]/samples2)*255);
+			_gbuffer[i*width+j] = int((color[1]/samples2) *255);
+			_bbuffer[i*width+j] = int((color[2]/samples2) *255);
 		}
 	}
 	flushPixelBuffer(fileName);
