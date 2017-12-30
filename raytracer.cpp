@@ -240,40 +240,29 @@ void Raytracer::flushPixelBuffer( std::string file_name ) {
 Colour Raytracer::shadeRay( Ray3D& ray, int relfectionsLeft ) {
     Colour col(0.0, 0.0, 0.0); 
     traverseScene(_root, ray); 
-
     // Don't bother shading if the ray didn't hit 
     // anything.
     if (!ray.intersection.none) {
         computeShading(ray); 
         col = ray.col;  
-
 		// You'll want to call shadeRay recursively (with a different ray, 
 		// of course) here to implement reflection/refraction effects.
-
 		//Reflection
-
 		if (relfectionsLeft > 0 && ray.intersection.mat->isReflective) {
 
 			Vector3D normal = ray.intersection.normal;
 			normal.normalize();
 			Vector3D reflectDir = ray.dir - 2 * normal.dot(ray.dir) * normal;
 			reflectDir.normalize();
-
 			Point3D reflectPoint = ray.intersection.point;
-
 			reflectPoint = reflectPoint = reflectPoint + 0.1*reflectDir;
-
 			Ray3D reflectRay(reflectPoint, reflectDir);
-
 			Colour reflectColor = shadeRay(reflectRay, relfectionsLeft - 1);
 			reflectColor.clamp();
-
 			col = col + (ray.intersection.mat->specular * reflectColor);
 		}
     }
-
 	col.clamp();
-
     return col; 
 }	
 
@@ -298,7 +287,7 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 			int samples2 = samples * samples;
 			/////////////////
 			Colour color(0.0, 0.0, 0.0);
-			for (int k = 0; k < samples*samples; k++) {
+			for (int k = 0; k < samples2; k++) {
 				int y = (int)k / samples;
 				int x = k % samples;
 
@@ -318,22 +307,6 @@ void Raytracer::render( int width, int height, Point3D eye, Vector3D view,
 
 				color = color + col;
 			}
-			/*
-            Point3D origin(0, 0, 0);
-			Point3D imagePlane;
-			imagePlane[0] = (-double(width)/2 + 0.5 + j)/factor;
-			imagePlane[1] = (-double(height)/2 + 0.5 + i)/factor;
-			imagePlane[2] = -1;
-
-			// TODO: Convert ray to world space and call 
-			// shadeRay(ray) to generate pixel colour. 
-			Vector3D direction = imagePlane - origin;
-			direction.normalize();
-			Ray3D ray = Ray3D(viewToWorld * origin, viewToWorld * direction);
-			ray.dir.normalize();
-			Colour col = shadeRay(ray, 1);
-			*/
-
 			_rbuffer[i*width+j] = int((color[0]/samples2)*255);
 			_gbuffer[i*width+j] = int((color[1]/samples2) *255);
 			_bbuffer[i*width+j] = int((color[2]/samples2) *255);
