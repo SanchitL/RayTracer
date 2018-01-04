@@ -113,9 +113,18 @@ bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 	return false;
 }
 
-bool UnitCylinder::intersect(Ray3D& ray, const Matrix4x4& wordlToModel,
+bool UnitCylinder::intersect(Ray3D& ray, const Matrix4x4& worldToModel,
 	const Matrix4x4& modelToWorld) {
 
+	int radius = 1;
+	double t0, t1;
+
+	Point3D modelPoint = worldToModel*ray.origin;
+	Vector3D modelDirection = worldToModel*ray.dir;
+
+	double A = modelDirection[0] * modelDirection[0]
+		+ modelDirection[2] * modelDirection[2];
+	double B = 
 	return false;
 }
 
