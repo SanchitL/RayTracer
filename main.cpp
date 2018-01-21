@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 		aaSamples = atoi(argv[3]);
 	}
 
+	
 	std::cout << "Rendering with width: " << width << ", height: " << height << " and aaSamples: " << aaSamples << std::endl;
 	// Camera parameters.
 	Point3D eye(0, 0, 1);
@@ -71,6 +72,7 @@ int main(int argc, char* argv[])
 
 	// Render the scene, feel free to make the image smaller for
 	// testing purposes.
+	
 	std::cout << "Now rendering view1 .... \n" << std::endl;
 	raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
 
