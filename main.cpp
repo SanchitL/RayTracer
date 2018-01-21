@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
 	}
 
 	std::cout << "Rendering with width: " << width << ", height: " << height << " ..." << std::endl;
+	if (aaSamples > 1) std::cout << "AA with x: " << aaSamples << std::endl;
 	// Camera parameters.
 	Point3D eye(0, 0, 1);
 	Vector3D view(0, 0, -1);
@@ -71,8 +72,8 @@ int main(int argc, char* argv[])
 
 	// Render the scene, feel free to make the image smaller for
 	// testing purposes.	
-	// std::cout << "Now rendering view1 .... \n" << std::endl;
-	// raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
+	std::cout << "Now rendering view1 .... \n" << std::endl;
+	raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
 
 	// Render it from a different point of view.
 	Point3D eye2(4, 2, 1);
