@@ -3,5 +3,7 @@
  
  ## Part 1: Basic Intersection
  
+ In the first part of this assignment I had to implement the intersection algorithm with a sphere and a plane. These are the results.
  
-[[https://github.com/SanchitL/RayTracer/blob/master/images/sig1.bmp|alt=Signature]]
+![Scene Signature](https://raw.githubusercontent.com/SanchitL/RayTracer/master/images/sig1.bmp)
+![Scene Signature2](https://raw.githubusercontent.com/SanchitL/RayTracer/master/images/sig2.bmp)
