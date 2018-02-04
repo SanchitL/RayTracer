@@ -53,7 +53,8 @@ Mkfile.old
 dkms.conf
 
 # Images
-*.bmp
+view1.*
+view2.*
 *.pdf
 
 # IDE
