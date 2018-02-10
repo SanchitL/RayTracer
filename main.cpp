@@ -13,11 +13,11 @@ CSC418, SPRING 2005
 
 int main(int argc, char* argv[])
 {
-	// Build your scene and setup your camera here, by calling 
+	// Build your scene and setup your camera here, by calling
 	// functions from Raytracer.  The code here sets up an example
 	// scene and renders it from two different view points, DO NOT
-	// change this if you're just implementing part one of the 
-	// assignment.  
+	// change this if you're just implementing part one of the
+	// assignment.
 	Raytracer raytracer;
 	int width = 320;
 	int height = 240;
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 		aaSamples = atoi(argv[3]);
 	}
 
-	std::cout << "Rendering with width: " << width << ", height: " << height << " ..." << std::endl;
+	std::cout << "Rendering with width: " << width << ", height: " << height << " and aaSamples: " << aaSamples << std::endl;
 	// Camera parameters.
 	Point3D eye(0, 0, 1);
 	Vector3D view(0, 0, -1);
@@ -70,9 +70,9 @@ int main(int argc, char* argv[])
 	raytracer.scale(plane, Point3D(0, 0, 0), factor2);
 
 	// Render the scene, feel free to make the image smaller for
-	// testing purposes.	
-	// std::cout << "Now rendering view1 .... \n" << std::endl;
-	// raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
+	// testing purposes.
+	std::cout << "Now rendering view1 .... \n" << std::endl;
+	raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
 
 	// Render it from a different point of view.
 	Point3D eye2(4, 2, 1);
