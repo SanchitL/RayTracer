@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 		aaSamples = atoi(argv[3]);
 	}
 
-	
 	std::cout << "Rendering with width: " << width << ", height: " << height << " and aaSamples: " << aaSamples << std::endl;
 	// Camera parameters.
 	Point3D eye(0, 0, 1);
