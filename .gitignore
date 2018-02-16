@@ -60,8 +60,5 @@ view2.*
 # IDE
 .vs
 Debug
-<<<<<<< HEAD
 *.docx
-=======
->>>>>>> 885ba95c3a2addc7a6b64d990d8955498269d62c
 .vscode
