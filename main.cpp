@@ -55,23 +55,27 @@ int main(int argc, char* argv[])
 		Colour(0.9, 0.9, 0.9)));
 
 	// Add a unit square into the scene with material mat.
-	SceneDagNode* sphere = raytracer.addObject(new UnitSphere(), &gold);
-	SceneDagNode* plane = raytracer.addObject(new UnitSquare(), &jade);
+	// SceneDagNode* sphere = raytracer.addObject(new UnitSphere(), &gold);
+	// SceneDagNode* plane = raytracer.addObject(new UnitSquare(), &jade);
+	SceneDagNode* cylinder = raytracer.addObject(new UnitCylinder(), &jade);
+
 
 	// Apply some transformations to the unit square.
 	double factor1[3] = { 1.0, 2.0, 1.0 };
 	double factor2[3] = { 6.0, 6.0, 6.0 };
-	raytracer.translate(sphere, Vector3D(0, 0, -5));
-	raytracer.rotate(sphere, 'x', -45);
-	raytracer.rotate(sphere, 'z', 45);
-	raytracer.scale(sphere, Point3D(0, 0, 0), factor1);
+	// raytracer.translate(sphere, Vector3D(0, 0, -5));
+	// raytracer.rotate(sphere, 'x', -45);
+	// raytracer.rotate(sphere, 'z', 45);
+	// raytracer.scale(sphere, Point3D(0, 0, 0), factor1);
 
-	raytracer.translate(plane, Vector3D(0, 0, -7));
-	raytracer.rotate(plane, 'z', 45);
-	raytracer.scale(plane, Point3D(0, 0, 0), factor2);
+	// raytracer.translate(plane, Vector3D(0, 0, -7));
+	// raytracer.rotate(plane, 'z', 45);
+	// raytracer.scale(plane, Point3D(0, 0, 0), factor2);
+
+	raytracer.translate(cylinder, Vector3D(0, 0, -5));
 
 	// Render the scene, feel free to make the image smaller for
-	// testing purposes.	
+	// testing purposes.
 	std::cout << "Now rendering view1 .... \n" << std::endl;
 	raytracer.render(width, height, eye, view, up, fov, aaSamples, "view1.bmp");
 
