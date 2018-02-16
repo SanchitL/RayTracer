@@ -60,4 +60,8 @@ view2.*
 # IDE
 .vs
 Debug
+<<<<<<< HEAD
 *.docx
+=======
+.vscode
+>>>>>>> Updated git ignore
