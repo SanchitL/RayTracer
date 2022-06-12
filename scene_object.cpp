@@ -15,15 +15,15 @@
 bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
         const Matrix4x4& modelToWorld ) {
     // TODO: implement intersection code for UnitSquare, which is
-    // defined on the xy-plane, with vertices (0.5, 0.5, 0), 
+    // defined on the xy-plane, with vertices (0.5, 0.5, 0),
     // (-0.5, 0.5, 0), (-0.5, -0.5, 0), (0.5, -0.5, 0), and normal
     // (0, 0, 1).
     //
     // Your goal here is to fill ray.intersection with correct values
-    // should an intersection occur.  This includes intersection.point, 
-    // intersection.normal, intersection.none, intersection.t_value.   
+    // should an intersection occur.  This includes intersection.point,
+    // intersection.normal, intersection.none, intersection.t_value.
     //
-    // HINT: Remember to first transform the ray into object space  
+    // HINT: Remember to first transform the ray into object space
     // to simplify the intersection test.
 
     //Transform the ray
@@ -58,14 +58,14 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 
 bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
         const Matrix4x4& modelToWorld ) {
-    // TODO: implement intersection code for UnitSphere, which is centred 
-    // on the origin.  
+    // TODO: implement intersection code for UnitSphere, which is centred
+    // on the origin.
     //
     // Your goal here is to fill ray.intersection with correct values
-    // should an intersection occur.  This includes intersection.point, 
-    // intersection.normal, intersection.none, intersection.t_value.   
+    // should an intersection occur.  This includes intersection.point,
+    // intersection.normal, intersection.none, intersection.t_value.
     //
-    // HINT: Remember to first transform the ray into object space  
+    // HINT: Remember to first transform the ray into object space
     // to simplify the intersection test.
     Point3D centre = Point3D(0.0, 0.0, 0.0);
     int radius = 1;
@@ -97,7 +97,7 @@ bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
     else if (t_2 < t_1) {
         t = t_2;
     }
-    
+
     if (t <= 0) return false;
 
     Point3D intersectionPoint = modelPoint + t*modelDir;
